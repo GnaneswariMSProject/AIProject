@@ -1,3 +1,15 @@
+"""
+Author: Gnaneswari Tappetla
+Title: implement Risk-Aware NLP Streamlit application with prediction and EDA modules
+1. Added Streamlit UI with sidebar navigation (Prediction and EDA Analysis)
+2. Integrated transformer-based risk classification model using HuggingFace
+3. Implemented text preprocessing and weak labeling using regex-based risk/safe patterns
+4. Added real-time prediction with probability metrics and risk level indicators
+5. Included sample input buttons for quick testing scenarios
+6. Implemented dataset upload functionality for exploratory data analysis (EDA)
+7. Added visualizations: rating distribution, useful count histogram, top drugs bar chart
+8. Added risk label distribution, review length boxplot, word count histogram
+"""
 import streamlit as st
  
 
