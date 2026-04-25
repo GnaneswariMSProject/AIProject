@@ -342,3 +342,148 @@ elif menu == "📊 EDA Analysis":
 
             ax.set_title("Helpful Votes Distribution")
             st.pyplot(fig)
+"""
+Author: Ramoji Rao
+1. Implemented Top 15 Most Mentioned Drugs bar chart using seaborn
+2. Added Risk Label Distribution visualization to compare Safe vs Unsafe reviews
+3. Introduced Review Length by Risk boxplot for behavioral pattern analysis
+4. Added Word Count Distribution histogram with KDE curve
+5. Implemented WordCloud visualization for cleaned review text insights
+6. Added Feature Correlation Heatmap for numeric variables (rating, usefulCount, review_length, word_count)
+7. Improved visual consistency with color palettes and figure sizing
+8. Added success notification after EDA completion
+"""
+# TOP DRUGS
+          
+        if "drugName" in df.columns:
+            st.subheader("💊 Top 15 Mentioned Drugs")
+
+            top_drugs = df["drugName"].value_counts().head(15)
+
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.barplot(
+                x=top_drugs.values,
+                y=top_drugs.index,
+                palette="magma",
+                ax=ax
+            )
+
+            ax.set_title("Most Reviewed Drugs")
+            st.pyplot(fig)
+
+          
+        # RISK LABEL DISTRIBUTION
+          
+        st.subheader("⚠️ Risk Label Distribution")
+
+        fig, ax = plt.subplots(figsize=(8, 5))
+        sns.countplot(
+            x=LABEL_COL,
+            data=df,
+            palette=["#2ecc71", "#e74c3c"],
+            edgecolor="black",
+            ax=ax
+        )
+
+        ax.set_xticklabels(["Safe", "Unsafe"])
+        ax.set_title("Safe vs Unsafe Reviews")
+        st.pyplot(fig)
+
+          
+        # REVIEW LENGTH BY RISK
+          
+        st.subheader("📝 Review Length by Risk")
+
+        fig, ax = plt.subplots(figsize=(8, 5))
+        sns.boxplot(
+            x=LABEL_COL,
+            y="review_length",
+            data=df,
+            palette=["#3498db", "#e74c3c"],
+            ax=ax
+        )
+
+        ax.set_xticklabels(["Safe", "Unsafe"])
+        ax.set_title("Length of Reviews")
+        st.pyplot(fig)
+
+          
+        # WORD COUNT
+          
+        st.subheader("📚 Word Count Distribution")
+
+        fig, ax = plt.subplots(figsize=(10, 5))
+        sns.histplot(
+            df["word_count"],
+            bins=40,
+            kde=True,
+            color="#9b59b6",
+            ax=ax
+        )
+
+        ax.set_title("Words per Review")
+        st.pyplot(fig)
+
+          
+        # WORDCLOUD
+          
+        st.subheader("☁️ Review WordCloud")
+
+        text_data = " ".join(df["clean_text"].astype(str))
+
+        wc = WordCloud(
+            width=1200,
+            height=600,
+            background_color="white",
+            colormap="plasma"
+        ).generate(text_data)
+
+        fig, ax = plt.subplots(figsize=(12, 6))
+        ax.imshow(wc, interpolation="bilinear")
+        ax.axis("off")
+        st.pyplot(fig)
+
+          
+        # CORRELATION
+          
+        st.subheader("📈 Feature Correlation Heatmap")
+
+        numeric_cols = [
+            "rating",
+            "usefulCount",
+            "review_length",
+            "word_count"
+        ]
+
+        numeric_cols = [c for c in numeric_cols if c in df.columns]
+
+        if len(numeric_cols) > 1:
+
+            corr = df[numeric_cols].corr()
+
+            fig, ax = plt.subplots(figsize=(8, 6))
+            sns.heatmap(
+                corr,
+                annot=True,
+                cmap="coolwarm",
+                linewidths=1,
+                square=True,
+                ax=ax
+            )
+
+            ax.set_title("Correlation Matrix")
+            st.pyplot(fig)
+ 
+        st.subheader("⚠️ Risk Label Distribution")
+        fig, ax = plt.subplots()
+        sns.countplot(x=LABEL_COL, data=df,palette="viridis", ax=ax)
+        ax.set_xticklabels(["Safe", "Unsafe"])
+        st.pyplot(fig)
+        
+        st.subheader("📝 Review Length by Risk")
+        fig, ax = plt.subplots()
+        sns.boxplot(x=LABEL_COL, y="review_length",palette="viridis", data=df, ax=ax)
+        ax.set_xticklabels(["Safe", "Unsafe"])
+        st.pyplot(fig)
+        
+        st.success("✅ EDA Completed Successfully!")
